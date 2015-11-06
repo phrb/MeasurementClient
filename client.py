@@ -9,7 +9,7 @@ from GCEInterface.interface import GCEInterface
 
 log = logging.getLogger(__name__)
 
-parser = argparse.ArgumentParser(add_help=False)
+parser = argparse.ArgumentParser(parents=opentuner.argparsers())
 parser.add_argument('--zone',
                     type     = str,
                     default  = "us-central1-f",
