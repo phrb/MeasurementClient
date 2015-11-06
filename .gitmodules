@@ -1,0 +1,3 @@
+[submodule "GCEInterface"]
+	path = GCEInterface
+	url = git@github.com:phrb/GCEInterface.git
