@@ -30,6 +30,10 @@ parser.add_argument('--interface-name',
                     type     = str,
                     required = True,
                     help     = "The name of your measurement interface.")
+parser.add_argument('--instances',
+                    type     = int,
+                    default  = 8,
+                    help     = "The number of GCE instances to create.")
 
 class MeasurementClient(MeasurementDriver):
     def __init__(self,
@@ -45,7 +49,7 @@ class MeasurementClient(MeasurementDriver):
                                           repo            = self.args.repo,
                                           interface_path  = self.args.interface_path,
                                           interface_name  = self.args.interface_name,
-                                          instance_number = self.args.parallelism)
+                                          instance_number = self.args.instances)
 
         self.gce_interface.create_and_connect_all()
 
