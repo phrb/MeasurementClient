@@ -65,7 +65,7 @@ class MeasurementClient(MeasurementDriver):
         self.run_desired_results(desired_results)
 
     def run_desired_results(self, desired_results):
-        requests = []
+        requests_info = []
 
         for desired_result in desired_results:
             desired_result.limit = self.run_time_limit(desired_result)
@@ -79,26 +79,30 @@ class MeasurementClient(MeasurementDriver):
 
             self.input_manager.before_run(desired_result, input)
 
-            requests.append((desired_result.configuration,
-                             input,
-                             desired_result.limit))
+            requests_info.append((desired_result.configuration,
+                                  input,
+                                  desired_result.limit))
 
-        requests  = self.gce_interface.request_results(requests)
+        requests  = self.gce_interface.request_results(requests_info)
         results   = []
 
         requested = len(requests)
         i         = 0
 
         while len(results) < requested:
-            result = self.gce_interface.query_result(requests[i])
+            request = requests[i]
+            result  = self.gce_interface.query_result(request)
 
             if result != None:
-                d_result = desired_results[i]
-                input    = requests[i][1]
+                d_result = desired_results[request[2]]
+                input    = requests_info[request[2]][1]
+
                 results.append((result, input, i))
+                requests.pop(i)
+
                 self.report_result(d_result, result, input)
 
             i += 1
 
-            if i == requested:
+            if i == len(requests):
                 i = 0
